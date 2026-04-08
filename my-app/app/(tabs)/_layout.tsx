@@ -16,18 +16,39 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
-      <Tabs.Screen
-        name="index"
+<Tabs.Screen
+        name="stylesheet-screen"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'StyleSheet',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="list.bullet.rectangle" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="inline-screen"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Inline',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="text.alignleft" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="paper-screen"
+        options={{
+          title: 'Paper',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="doc.text" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="rneui-screen"
+        options={{
+          title: 'RNEUI',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="square.grid.2x2" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="responsive-screen"
+        options={{
+          title: 'Responsive',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="arrow.up.left.and.arrow.down.right" color={color} />,
         }}
       />
     </Tabs>
