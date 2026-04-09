@@ -1,25 +1,72 @@
-**Tasks**
+# Tasks
 
-**How React Testing Library works with Jest**
+**Mocking API Calls in Jest**
 
-React Testing Library works alongside Jest by focusing on testing components the way users actually interact with them. Jest acts as the test runner—it runs the tests, provides assertions (like `expect`), and handles things like mocking and test structure. React Testing Library sits on top of that and helps render components into a virtual DOM so we can interact with them.
+Mocking API calls in Jest allows you to simulate server responses without actually making network requests. This makes tests faster, more reliable, and independent of external systems.
 
-Instead of testing internal functions or state, React Testing Library encourages testing what appears on the screen. You render a component using `render()`, then use queries like `getByText` or `getByRole` to find elements, just like a user would. From there, you simulate actions like clicking or typing using utilities like `fireEvent` or `userEvent`, and then use Jest assertions to check if the UI updated correctly. Overall, Jest handles the testing framework, while React Testing Library handles how we interact with and inspect the UI.
+**1. Using `jest.fn()`**
 
----
+`jest.fn()` creates a mock function that you can control. You can specify what it should return when called.
 
-**Reflection** 
+```js
+const mockFetch = jest.fn();
 
-**Benefits of using React Testing Library**
+mockFetch.mockResolvedValue({
+  json: async () => ({ data: "test data" })
+});
+```
 
-One of the biggest benefits is that it focuses on user behaviour instead of implementation details. This means tests are more realistic because they check what the user actually sees and does, rather than things like internal state or specific function calls. Because of that, the tests are less likely to break when you refactor your code. For example, if you change how a component is implemented internally but the UI stays the same, your tests will still pass.
+Example usage in a test:
 
-Another benefit is that it encourages better coding practices. Since you're testing from the user’s perspective, it naturally pushes you to build more accessible and well-structured components. It also makes the tests easier to understand, because they read more like real user actions rather than technical steps.
+```js
+test("fetches data", async () => {
+  const fetchData = async () => {
+    const res = await mockFetch();
+    return res.json();
+  };
 
-**Challenges when simulating user interaction**
+  const data = await fetchData();
 
-One challenge I ran into was understanding the difference between different query methods, like `getBy`, `queryBy`, and `findBy`. At first, it was confusing when tests failed because I used the wrong one, especially with asynchronous updates.
+  expect(data).toEqual({ data: "test data" });
+  expect(mockFetch).toHaveBeenCalled();
+});
+```
 
-Another issue was simulating more realistic user interactions. Using basic events like `fireEvent` felt a bit limited, and switching to `userEvent` introduced more complexity because it behaves more like a real user (for example, typing is not instant). This sometimes caused timing issues in tests, especially when components updated asynchronously.
+*Key idea: You manually define what the API should return.*
 
-I also found it tricky to debug failing tests, because sometimes the issue wasn’t obvious just from the error message. I had to get used to using tools like `screen.debug()` to see what was actually being rendered. Over time it got easier, but at the start it definitely slowed me down.
+**2. Using `jest.mock()`**
+
+`jest.mock()` replaces an entire module (like Axios or fetch).
+
+```js
+import axios from "axios";
+
+jest.mock("axios");
+
+test("fetches users", async () => {
+  axios.get.mockResolvedValue({
+    data: [{ id: 1, name: "John" }]
+  });
+
+  const fetchUsers = async () => {
+    const res = await axios.get("/users");
+    return res.data;
+  };
+
+  const users = await fetchUsers();
+
+  expect(users).toEqual([{ id: 1, name: "John" }]);
+  expect(axios.get).toHaveBeenCalledWith("/users");
+});
+```
+*Key idea: You mock the entire module, so all calls to it are controlled. You replace real API calls with controlled fake responses.*
+
+# Reflection
+
+Why is it important to mock API calls in tests?
+
+Mocking API calls in tests is important because it allows developers to isolate the specific functionality they are testing without relying on external systems. Real API calls can introduce variability due to network latency, server errors, or changing data, which can make tests unreliable and slow. By mocking these calls, tests become deterministic and run consistently regardless of external conditions. This also enables developers to simulate different scenarios, such as successful responses, failures, or edge cases, which may be difficult to reproduce with real APIs. As a result, mocking improves both the reliability and efficiency of the testing process.
+
+What are some common pitfalls when testing asynchronous code?
+
+Testing asynchronous code presents several common challenges. One major pitfall is failing to properly handle promises, such as forgetting to use `async/await` or not returning a promise from the test, which can cause tests to complete before the asynchronous logic finishes executing. Another issue is incorrectly mocking resolved or rejected values, leading to misleading test results. Developers may also neglect to include sufficient assertions, particularly when testing error cases, which can result in false positives. Additionally, not resetting or clearing mocks between tests can cause unintended interactions and unreliable outcomes. These pitfalls can make asynchronous tests difficult to debug and maintain if not handled carefully.
