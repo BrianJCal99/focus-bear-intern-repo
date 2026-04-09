@@ -1,15 +1,25 @@
-# Tasks
+**Tasks**
 
-## What is Jest?
-Jest is a JavaScript testing framework mainly used for testing applications built with React and React Native. It allows developers to write tests that check if their code works correctly. Jest is popular because it is easy to set up, fast, and comes with built-in features like test runners, mocking, and assertions. It also automatically finds test files and runs them, which makes the development process smoother.
+**How React Testing Library works with Jest**
 
-## Why are unit tests important?
-Unit tests are important because they focus on testing small parts of the code (like functions or components) in isolation. This helps make sure each part works correctly before combining everything together. They help catch bugs early, make code easier to maintain, and give confidence when making changes, since you can quickly see if something breaks.
+React Testing Library works alongside Jest by focusing on testing components the way users actually interact with them. Jest acts as the test runner—it runs the tests, provides assertions (like `expect`), and handles things like mocking and test structure. React Testing Library sits on top of that and helps render components into a virtual DOM so we can interact with them.
 
-# Reflection
+Instead of testing internal functions or state, React Testing Library encourages testing what appears on the screen. You render a component using `render()`, then use queries like `getByText` or `getByRole` to find elements, just like a user would. From there, you simulate actions like clicking or typing using utilities like `fireEvent` or `userEvent`, and then use Jest assertions to check if the UI updated correctly. Overall, Jest handles the testing framework, while React Testing Library handles how we interact with and inspect the UI.
 
-## Why is automated testing important in software development?
-From what I’ve learned, automated testing is important because it saves time and reduces human error. Instead of manually checking everything after each change, tests can run automatically and instantly show if something is broken. This is especially useful in larger projects like apps, where one small change can affect multiple features. It also makes teamwork easier because everyone can rely on tests to make sure the codebase stays stable.
+---
 
-## What did you find challenging when writing your first Jest test?
-When writing my first Jest test, the most challenging part was understanding how to structure the test and what exactly to test. It was confusing at first to know what counts as a “good” test and how detailed it should be. I also found mocking a bit tricky, especially when dealing with functions that depend on external data like APIs. But after some practice, it started to make more sense, and I got more comfortable with how tests are written and organized.
+**Reflection** 
+
+**Benefits of using React Testing Library**
+
+One of the biggest benefits is that it focuses on user behaviour instead of implementation details. This means tests are more realistic because they check what the user actually sees and does, rather than things like internal state or specific function calls. Because of that, the tests are less likely to break when you refactor your code. For example, if you change how a component is implemented internally but the UI stays the same, your tests will still pass.
+
+Another benefit is that it encourages better coding practices. Since you're testing from the user’s perspective, it naturally pushes you to build more accessible and well-structured components. It also makes the tests easier to understand, because they read more like real user actions rather than technical steps.
+
+**Challenges when simulating user interaction**
+
+One challenge I ran into was understanding the difference between different query methods, like `getBy`, `queryBy`, and `findBy`. At first, it was confusing when tests failed because I used the wrong one, especially with asynchronous updates.
+
+Another issue was simulating more realistic user interactions. Using basic events like `fireEvent` felt a bit limited, and switching to `userEvent` introduced more complexity because it behaves more like a real user (for example, typing is not instant). This sometimes caused timing issues in tests, especially when components updated asynchronously.
+
+I also found it tricky to debug failing tests, because sometimes the issue wasn’t obvious just from the error message. I had to get used to using tools like `screen.debug()` to see what was actually being rendered. Over time it got easier, but at the start it definitely slowed me down.
