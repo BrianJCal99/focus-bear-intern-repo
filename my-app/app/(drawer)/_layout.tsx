@@ -39,6 +39,10 @@ export default function DrawerLayout() {
           name="profile"
           options={{ drawerLabel: 'Profile', title: 'Profile' }}
         />
+        <Drawer.Screen
+          name="gestures"
+          options={{ drawerLabel: 'Gestures & Animations', title: 'Gestures & Animations' }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   );

@@ -46,6 +46,16 @@ export default function HomeScreen() {
           <ThemedText style={styles.buttonText}>Open Modal</ThemedText>
         </Pressable>
       </ThemedView>
+
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Gestures & Animations</ThemedText>
+        <ThemedText>
+          Explore gesture handling, Reanimated, the Animated API, and InteractionManager.
+        </ThemedText>
+        <Pressable style={styles.button} onPress={() => router.push('/gestures')}>
+          <ThemedText style={styles.buttonText}>Open Gestures & Animations</ThemedText>
+        </Pressable>
+      </ThemedView>
     </ParallaxScrollView>
   );
 }
