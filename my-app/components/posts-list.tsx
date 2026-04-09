@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { fetchPosts, Post } from '@/services/api';
@@ -19,8 +18,7 @@ const TOTAL_POSTS = 100;
 const brand = '#635BFF';
 
 const PostCard = React.memo(function PostCard({ post }: { post: Post }) {
-  const scheme = useColorScheme() ?? 'light';
-  const isDark = scheme === 'dark';
+  const isDark = useColorScheme() === 'dark';
 
   return (
     <View style={[styles.card, isDark ? styles.cardDark : styles.cardLight]}>
@@ -56,7 +54,7 @@ export function PostsList() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
   const tint = Colors[scheme].tint;
 
   const load = useCallback(async (start: number, append: boolean) => {
@@ -73,13 +71,19 @@ export function PostsList() {
     load(0, false).finally(() => setLoading(false));
   }, [load]);
 
-  const handleLoadMore = async () => {
+  const handleLoadMore = useCallback(async () => {
     setLoadingMore(true);
     await load(posts.length, true);
     setLoadingMore(false);
-  };
+  }, [load, posts.length]);
 
-  const hasMore = posts.length < TOTAL_POSTS;
+  const handleRetry = useCallback(() => {
+    setError(null);
+    setLoading(true);
+    load(0, false).finally(() => setLoading(false));
+  }, [load]);
+
+  const hasMore = useMemo(() => posts.length < TOTAL_POSTS, [posts.length]);
 
   if (loading) {
     return (
@@ -96,7 +100,7 @@ export function PostsList() {
         <Text style={styles.errorIcon}>⚠️</Text>
         <ThemedText type="defaultSemiBold" style={styles.errorText}>{error}</ThemedText>
         <Pressable
-          onPress={() => { setError(null); setLoading(true); load(0, false).finally(() => setLoading(false)); }}
+          onPress={handleRetry}
           style={[styles.loadMoreBtn, { backgroundColor: tint, paddingHorizontal: 24 }]}>
           <Text style={styles.loadMoreText}>Try again</Text>
         </Pressable>
@@ -164,6 +168,9 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 12,
     paddingBottom: 40,
+  },
+  countRow: {
+    marginBottom: 4,
   },
   countText: {
     fontSize: 13,
