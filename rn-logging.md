@@ -1,0 +1,14 @@
+### Reflection
+
+**Why is logging important in a production React Native app?**
+Logging in a production React Native app is essential because it acts as the “eyes and ears” of the development team once the app is in the hands of real users. Unlike development, where you can use breakpoints and console logs, production environments are limited and often unpredictable. Users might experience crashes, slow performance, or unexpected behaviour on different devices, OS versions, or network conditions. Without proper logging, these issues become almost impossible to reproduce or diagnose. Logging helps capture what the app was doing before something went wrong, making it easier to trace the root cause and reduce downtime or repeated bugs.
+
+**How does Sentry improve debugging and issue tracking?**
+Sentry significantly improves debugging and issue tracking by automatically collecting real-time error data from production apps. Instead of relying on users to report problems manually, Sentry captures crashes, exceptions, and performance issues as they happen. It provides detailed context such as stack traces, device type, OS version, network state, and even “breadcrumbs” (a timeline of user actions leading up to the error). This is extremely useful because many bugs in React Native only appear under specific conditions, and Sentry helps recreate that exact scenario. It also groups similar errors together, so developers can see patterns instead of isolated incidents, making prioritisation and fixes much more efficient.
+
+**What are best practices for handling and logging errors?**
+Best practices for handling and logging errors start with making sure logs are meaningful and structured. Not every action needs to be logged - too much logging creates noise and makes real issues harder to find. Instead, logs should focus on important events like API failures, unexpected state changes, authentication issues, or navigation errors. It’s also important to categorise logs by severity (for example: info, warning, error, critical) so teams can prioritise what needs immediate attention.
+
+Another key practice is avoiding sensitive data in logs. Things like passwords, tokens, personal user information, or payment details should never be logged, even in development, because they can accidentally end up in production monitoring tools. Logs should also be consistent and structured (for example using JSON format) so they can be easily searched, filtered, and analysed.
+
+Finally, good error handling goes hand-in-hand with logging. Instead of letting an app crash or silently fail, errors should be caught gracefully, logged properly, and ideally reported to tools like Sentry. This combination ensures that issues are not only recorded but also actionable, helping developers continuously improve app stability and user experience.
