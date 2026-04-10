@@ -1,23 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
-import { fetchUsers, User } from '../utils/api';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../store';
+import { loadUsers } from '../store/userSlice';
 
 export default function UserList() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const { users, loading, error } = useSelector((state: RootState) => state.users);
 
   useEffect(() => {
-    fetchUsers()
-      .then((data) => {
-        setUsers(data);
-        setLoading(false);
-      })
-      .catch((err: Error) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
+    dispatch(loadUsers());
+  }, [dispatch]);
 
   if (loading) {
     return (
