@@ -1,0 +1,7 @@
+{
+  "greeting": "¡Hola!",
+  "selectLanguage": "Seleccionar idioma",
+  "currentLanguage": "Idioma actual: {{lang}}",
+  "home": "Inicio",
+  "explore": "Explorar"
+}
